@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "name": "voice-note-task-classifier",
+  "title": "Route voice-note transcripts to task-specific subagents",
+  "created": "2026-10-16",
+  "updated": "2026-10-16",
+  "status": "planning",
+  "stage": "spec",
+  "verdict": "fine-tune, conditional on beating the rung-0 LLM router on cost at comparable F1",
+  "supersedes": "private predecessor repo (not linked)",
+  "superseded_by": null,
+  "task": {
+    "pipeline_tag": "text-classification",
+    "modality": "text",
+    "languages": ["en"],
+    "label_kinds": ["route", "tag"],
+    "taxonomy": "taxonomy/labels.json",
+    "deployment": "cpu-server, on-device later (ONNX)",
+    "size_budget_params": 150000000
+  },
+  "baseline_to_beat": {
+    "model": "danielrosehill/Voice-Note-Intent-Classifier",
+    "version": "0.1.0",
+    "micro_f1": 0.56,
+    "macro_f1": 0.48,
+    "eval": "5-fold CV out-of-fold, 226 real screened notes, silver labels (two-LLM agreement)"
+  },
+  "hf_resources": [
+    {
+      "id": "danielrosehill/Voice-Note-Intent-Classifier",
+      "type": "model",
+      "role": "v0.1.0 placeholder release (frozen bge-base + logistic head); the baseline",
+      "public": true,
+      "verified": "2026-10-16"
+    },
+    {
+      "id": "danielrosehill/Voice-Notes-Screened",
+      "type": "dataset",
+      "role": "real voice notes, privacy-screened and approved by the author; evaluation and seed examples",
+      "public": true,
+      "verified": "2026-10-16"
+    }
+  ],
+  "hf_resources_considered_not_linked": [
+    { "id": "danielrosehill/Noisy-Voice-Notes", "reason": "public, but an ASR robustness set (audio in noisy environments), not routing data", "verified": "2026-10-16" },
+    { "id": "danielrosehill/Sample-Voice-Context-Data", "reason": "public, but synthetic career-narrative context for a RAG test, not routing data", "verified": "2026-10-16" }
+  ],
+  "links": {
+    "github": "https://github.com/danielrosehill/Voice-Note-Task-Classifier",
+    "planned_hf_model": "danielrosehill/Voice-Note-Task-Classifier (create at the first v0.2.0 release, not before)"
+  },
+  "release": {
+    "intent": "public",
+    "shape": "public project repo"
+  },
+  "resume": "docs/development-plan.md#current-position"
+}

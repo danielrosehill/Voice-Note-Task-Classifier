@@ -1,0 +1,127 @@
+{
+  "schema_version": "0.2.0",
+  "status": "draft — not frozen",
+  "updated": "2026-10-16",
+  "task": "multi-label",
+  "lineage": "Successor of the v0.1.0 label set released with danielrosehill/Voice-Note-Intent-Classifier (9 flat labels). v0.2.0 splits labels into `route` and `tag` kinds and adds meeting_notes and dev_spec. Changing a label's kind is a major change under the versioning rules in docs/spec.md, so this would be 1.0.0 if v0.1.0 had been frozen; it was a draft, so it is a minor bump.",
+  "semantics": {
+    "multi_label": "Every label is an independent yes/no. A transcript can carry several routes and several tags at once.",
+    "nullable": "Both lists may be empty. Empty `routes` with abstain=false means the note is confidently not actionable and is filed to the default inbox. abstain=true means the model is unsure and the router falls back to the rung-0 LLM router.",
+    "route": "A route label has a downstream subagent with its own role prompt and MCP tool. The router dispatches the transcript once per route label that clears its threshold.",
+    "tag": "A tag label is metadata only. It never triggers a dispatch. It exists so one classifier can do routing and loose tagging in a single pass. A tag can be promoted to a route later (minor version bump) once a subagent exists for it."
+  },
+  "labels": [
+    {
+      "id": "shopping_list",
+      "kind": "route",
+      "name": "Shopping list",
+      "definition": "Items to buy. One or more products, quantities optional, no further action requested.",
+      "route": "lists.shopping",
+      "since": "0.1.0"
+    },
+    {
+      "id": "todo",
+      "kind": "route",
+      "name": "To-do",
+      "definition": "One or more tasks the speaker (or someone they name) needs to do, with no fixed time slot. A due date may be mentioned.",
+      "route": "tasks",
+      "since": "0.1.0"
+    },
+    {
+      "id": "calendar_event",
+      "kind": "route",
+      "name": "Calendar event",
+      "definition": "Something happening at a specific date/time that should occupy a slot: an appointment, meeting, booking, deadline-as-event.",
+      "route": "calendar",
+      "since": "0.1.0"
+    },
+    {
+      "id": "email_draft",
+      "kind": "route",
+      "name": "Email draft",
+      "definition": "Dictated text intended to be sent as an email, usually with a recipient and an addressing/sign-off structure, or an explicit instruction to write one.",
+      "route": "email.draft",
+      "since": "0.1.0"
+    },
+    {
+      "id": "content_draft",
+      "kind": "route",
+      "name": "Content draft",
+      "definition": "Material for publication — blog post, blog outline, article, social post, video script — as opposed to private notes.",
+      "route": "documents.draft",
+      "since": "0.1.0"
+    },
+    {
+      "id": "meeting_notes",
+      "kind": "route",
+      "name": "Meeting notes",
+      "definition": "Minutes or a debrief of a meeting or call that happened, or an agenda/prep for one that has not happened yet.",
+      "route": "documents.meeting",
+      "since": "0.2.0"
+    },
+    {
+      "id": "ai_prompt",
+      "kind": "route",
+      "name": "AI prompt",
+      "definition": "Instructions addressed to an AI system to be run now — a prompt, system prompt, or task for a model or agent.",
+      "route": "ai.prompt",
+      "since": "0.1.0"
+    },
+    {
+      "id": "dev_spec",
+      "kind": "route",
+      "name": "Development spec / project outline",
+      "definition": "A description of something to be built — software, a model, a system — with its purpose, scope and requirements, meant to be filed as a project document rather than executed immediately.",
+      "route": "documents.spec",
+      "since": "0.2.0"
+    },
+    {
+      "id": "note_to_self",
+      "kind": "tag",
+      "name": "Note to self",
+      "definition": "Information to remember or file — a fact, a location, an observation. Nothing needs doing.",
+      "route": null,
+      "since": "0.1.0",
+      "changed": "0.2.0: route `notes` -> tag"
+    },
+    {
+      "id": "idea",
+      "kind": "tag",
+      "name": "Idea",
+      "definition": "A single discrete concept captured for later — a product, project, feature, or business idea — stated briefly.",
+      "route": null,
+      "since": "0.1.0",
+      "changed": "0.2.0: route `ideas` -> tag"
+    },
+    {
+      "id": "brainstorm",
+      "kind": "tag",
+      "name": "Brainstorm",
+      "definition": "Extended exploratory thinking out loud: weighing options, open questions, several half-formed ideas around one problem.",
+      "route": null,
+      "since": "0.1.0",
+      "changed": "0.2.0: route `ideas.longform` -> tag"
+    }
+  ],
+  "confusable_pairs": [
+    { "a": "todo", "b": "calendar_event", "rule": "Does it need a slot? 'Call the plumber' is todo; 'plumber coming Tuesday at ten' is calendar_event. A task with a due date stays todo." },
+    { "a": "todo", "b": "note_to_self", "rule": "Is there an action? 'The router password is on the sticker' is a note; 'change the router password' is a todo." },
+    { "a": "idea", "b": "brainstorm", "rule": "One discrete concept stated briefly is idea; open-ended reasoning across options is brainstorm. Length is a signal, not the rule." },
+    { "a": "brainstorm", "b": "content_draft", "rule": "Is it for an audience? Thinking for yourself is brainstorm; dictating something to publish is content_draft, however rough." },
+    { "a": "email_draft", "b": "content_draft", "rule": "An email has a recipient and is sent; a content draft is published or filed." },
+    { "a": "ai_prompt", "b": "todo", "rule": "Who does the work? Instructions addressed to an AI are ai_prompt; a task the speaker will do is todo. 'Write me a to-do list app' is ai_prompt." },
+    { "a": "email_draft", "b": "ai_prompt", "rule": "'Write an email to the landlord about the boiler' is labelled email_draft only: the email route has to act, and its subagent composes from instructions as well as dictation." },
+    { "a": "dev_spec", "b": "ai_prompt", "rule": "Execute now vs file for later. A spec addressed to an agent with 'go and build this' is ai_prompt; a description of a project to be written up and filed is dev_spec. Both may apply." },
+    { "a": "dev_spec", "b": "brainstorm", "rule": "A spec converges on what is to be built; a brainstorm stays open. A long spec that weighs options can carry dev_spec plus the brainstorm tag." },
+    { "a": "dev_spec", "b": "idea", "rule": "An idea is one line of concept; a spec has scope, requirements or an architecture. The idea tag may accompany dev_spec." },
+    { "a": "meeting_notes", "b": "calendar_event", "rule": "Prep for a future meeting is meeting_notes; booking the slot is calendar_event. A note that does both carries both." }
+  ],
+  "candidates": [
+    { "id": "message_draft", "definition": "A short message for WhatsApp/SMS/Slack rather than email.", "reason": "Different routing target and register from email_draft." },
+    { "id": "reminder", "definition": "A nudge tied to a time or place, not a task list item or a calendar slot.", "reason": "Overlaps todo and calendar_event; may resolve as a field on those instead of a label." },
+    { "id": "journal", "definition": "Personal reflection or diary entry.", "reason": "Appeared in every earlier taxonomy; would be a tag first." },
+    { "id": "research_query", "definition": "A question to look up or investigate.", "reason": "Borderline; may fold into ai_prompt since the route is an AI query." },
+    { "id": "expense_log", "definition": "A purchase, receipt or expense to record.", "reason": "Small but distinct route." },
+    { "id": "contact_info", "definition": "Contact details to save — a name with a phone, email or address.", "reason": "Routes to a contacts integration; distinct action." }
+  ]
+}
