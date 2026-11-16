@@ -82,7 +82,7 @@
       "definition": "Contact details to save or update: a name with a phone number, email, address, company or a group to file it under.",
       "route": "contacts",
       "since": "0.3.0",
-      "changed": "0.3.0 (2026-11-16): promoted from candidate; the synthetic Voice-to-Action recordings (Hebrish/Voice-To-Action) include contact notes"
+      "changed": "0.3.0 (2026-11-16): promoted from candidate; the synthetic Voice-to-Action recordings (danielrosehill/Voice-To-Action) include contact notes"
     },
     {
       "id": "note_to_self",

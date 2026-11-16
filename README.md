@@ -50,7 +50,7 @@ private working repo. What was carried over: [docs/lineage.md](docs/lineage.md).
 | Resource | What |
 |---|---|
 | Model [`danielrosehill/Voice-Note-Intent-Classifier`](https://huggingface.co/danielrosehill/Voice-Note-Intent-Classifier) | v0.1.0 placeholder: frozen `bge-base-en-v1.5` + logistic head, micro F1 0.56 on real notes. The baseline to beat. |
-| Dataset [`Hebrish/Voice-To-Action`](https://huggingface.co/datasets/Hebrish/Voice-To-Action) | Synthetic voice notes, one per label or label pair, read aloud by the author (recording started 2026-11-16; the dataset is created on the first sync). `prompt_kind` is the primary label, `prompt_note` the full label list. Staging data for testing the MCP routing app end to end. |
+| Dataset [`danielrosehill/Voice-To-Action`](https://huggingface.co/datasets/danielrosehill/Voice-To-Action) | Synthetic voice notes, one per label or label pair, read aloud by the author (recording started 2026-11-16; the dataset is created on the first sync). `prompt_kind` is the primary label, `prompt_note` the full label list. Staging data for testing the MCP routing app end to end. |
 | Dataset [`danielrosehill/Voice-Notes-Screened`](https://huggingface.co/datasets/danielrosehill/Voice-Notes-Screened) | Real voice-note transcripts, privacy-screened and approved by hand by the author. The evaluation source. |
 
 Both verified public on 2026-10-16. Releases from v0.2.0 on will go to a new model
