@@ -31,13 +31,13 @@ and keeps the subagents narrow: each gets one role prompt and one tool. The prom
 LLM router is built first as rung 0 and is the bar the classifier has to clear. See
 [the decision](docs/spec.md#decision-does-mcp-make-this-unnecessary).
 
-## Labels (taxonomy v0.2.0)
+## Labels (taxonomy v0.3.0)
 
 Multi-label and nullable: a note can carry several labels, or none.
 
 | Kind | Labels |
 |---|---|
-| **Route** — dispatched to a subagent | `shopping_list` `todo` `calendar_event` `email_draft` `content_draft` `meeting_notes` `ai_prompt` `dev_spec` |
+| **Route** — dispatched to a subagent | `shopping_list` `todo` `calendar_event` `email_draft` `content_draft` `meeting_notes` `ai_prompt` `dev_spec` `contact_info` (0.3.0) |
 | **Tag** — categorisation only, never dispatched | `note_to_self` `idea` `brainstorm` |
 
 Definitions and boundary rules: [`taxonomy/labels.json`](taxonomy/labels.json).
@@ -50,6 +50,7 @@ private working repo. What was carried over: [docs/lineage.md](docs/lineage.md).
 | Resource | What |
 |---|---|
 | Model [`danielrosehill/Voice-Note-Intent-Classifier`](https://huggingface.co/danielrosehill/Voice-Note-Intent-Classifier) | v0.1.0 placeholder: frozen `bge-base-en-v1.5` + logistic head, micro F1 0.56 on real notes. The baseline to beat. |
+| Dataset [`Hebrish/Voice-To-Action`](https://huggingface.co/datasets/Hebrish/Voice-To-Action) | Synthetic voice notes, one per label or label pair, read aloud by the author (recording started 2026-11-16; the dataset is created on the first sync). `prompt_kind` is the primary label, `prompt_note` the full label list. Staging data for testing the MCP routing app end to end. |
 | Dataset [`danielrosehill/Voice-Notes-Screened`](https://huggingface.co/datasets/danielrosehill/Voice-Notes-Screened) | Real voice-note transcripts, privacy-screened and approved by hand by the author. The evaluation source. |
 
 Both verified public on 2026-10-16. Releases from v0.2.0 on will go to a new model

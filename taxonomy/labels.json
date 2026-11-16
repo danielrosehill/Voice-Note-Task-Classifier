@@ -1,7 +1,7 @@
 {
-  "schema_version": "0.2.0",
+  "schema_version": "0.3.0",
   "status": "draft — not frozen",
-  "updated": "2026-10-16",
+  "updated": "2026-11-16",
   "task": "multi-label",
   "lineage": "Successor of the v0.1.0 label set released with danielrosehill/Voice-Note-Intent-Classifier (9 flat labels). v0.2.0 splits labels into `route` and `tag` kinds and adds meeting_notes and dev_spec. Changing a label's kind is a major change under the versioning rules in docs/spec.md, so this would be 1.0.0 if v0.1.0 had been frozen; it was a draft, so it is a minor bump.",
   "semantics": {
@@ -76,6 +76,15 @@
       "since": "0.2.0"
     },
     {
+      "id": "contact_info",
+      "kind": "route",
+      "name": "Contact",
+      "definition": "Contact details to save or update: a name with a phone number, email, address, company or a group to file it under.",
+      "route": "contacts",
+      "since": "0.3.0",
+      "changed": "0.3.0 (2026-11-16): promoted from candidate; the synthetic Voice-to-Action recordings (Hebrish/Voice-To-Action) include contact notes"
+    },
+    {
       "id": "note_to_self",
       "kind": "tag",
       "name": "Note to self",
@@ -114,6 +123,7 @@
     { "a": "dev_spec", "b": "ai_prompt", "rule": "Execute now vs file for later. A spec addressed to an agent with 'go and build this' is ai_prompt; a description of a project to be written up and filed is dev_spec. Both may apply." },
     { "a": "dev_spec", "b": "brainstorm", "rule": "A spec converges on what is to be built; a brainstorm stays open. A long spec that weighs options can carry dev_spec plus the brainstorm tag." },
     { "a": "dev_spec", "b": "idea", "rule": "An idea is one line of concept; a spec has scope, requirements or an architecture. The idea tag may accompany dev_spec." },
+    { "a": "contact_info", "b": "note_to_self", "rule": "A name with details to file in the address book is contact_info; a name to remember with no contact details is note_to_self." },
     { "a": "meeting_notes", "b": "calendar_event", "rule": "Prep for a future meeting is meeting_notes; booking the slot is calendar_event. A note that does both carries both." }
   ],
   "candidates": [
@@ -121,7 +131,6 @@
     { "id": "reminder", "definition": "A nudge tied to a time or place, not a task list item or a calendar slot.", "reason": "Overlaps todo and calendar_event; may resolve as a field on those instead of a label." },
     { "id": "journal", "definition": "Personal reflection or diary entry.", "reason": "Appeared in every earlier taxonomy; would be a tag first." },
     { "id": "research_query", "definition": "A question to look up or investigate.", "reason": "Borderline; may fold into ai_prompt since the route is an AI query." },
-    { "id": "expense_log", "definition": "A purchase, receipt or expense to record.", "reason": "Small but distinct route." },
-    { "id": "contact_info", "definition": "Contact details to save — a name with a phone, email or address.", "reason": "Routes to a contacts integration; distinct action." }
+    { "id": "expense_log", "definition": "A purchase, receipt or expense to record.", "reason": "Small but distinct route." }
   ]
 }
